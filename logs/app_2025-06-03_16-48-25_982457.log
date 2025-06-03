@@ -1,0 +1,97 @@
+2025-06-03 16:48:26.041 | INFO     | app.adapters.llm.qwen_client:<module>:22 - 成功导入dashscope库
+2025-06-03 16:48:26.041 | INFO     | app.service.dialogue_context_service:__init__:138 - 对话上下文管理服务初始化成功
+2025-06-03 16:48:26.135 | INFO     | app.adapters.llm.qwen_client:__init__:59 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-06-03 16:48:26.135 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
+2025-06-03 16:48:26.179 | INFO     | app.adapters.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-06-03 16:48:26.179 | INFO     | app.adapters.api.weather_api:__init__:56 - 高德地图天气API适配器初始化完成
+2025-06-03 16:48:26.179 | INFO     | app.service.weather_service:__init__:24 - 天气服务初始化完成
+2025-06-03 16:48:26.179 | INFO     | app.service.intent_service:__init__:65 - 意图识别服务初始化成功
+2025-06-03 16:48:30.879 | INFO     | app.controller.intent_controller:recognize_intent:56 - 接收到来自 127.0.0.1 的意图识别请求，文本: '今天天气怎么样16:45', 会话ID: user-123
+2025-06-03 16:48:30.879 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 今天天气怎么样16:45, 会话ID: user-123
+2025-06-03 16:48:30.879 | INFO     | app.service.dialogue_context_service:get_context:154 - 为会话 user-123 创建新的对话上下文
+2025-06-03 16:48:30.886 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 RuleBasedStrategy 识别出意图: QUERY_WEATHER
+2025-06-03 16:48:30.886 | INFO     | app.service.intent_service:_generate_result:358 - 处理天气查询意图，原始文本: '今天天气怎么样16:45'
+2025-06-03 16:48:30.886 | INFO     | app.service.intent_service:_generate_result:359 - 提取的实体: 城市='None', 日期='今天'
+2025-06-03 16:48:30.886 | WARNING  | app.service.intent_service:_get_device_location:500 - 从会话上下文获取位置失败: argument of type 'DialogueContext' is not iterable
+2025-06-03 16:48:30.886 | WARNING  | app.service.intent_service:_get_device_location:529 - 从IP地址获取位置失败: argument of type 'DialogueContext' is not iterable
+2025-06-03 16:48:30.886 | INFO     | app.service.intent_service:_get_device_location:533 - 无法获取设备实际位置，使用默认位置: 北京
+2025-06-03 16:48:30.886 | INFO     | app.service.intent_service:_generate_result:395 - 未指定城市，使用设备当前位置: 北京
+2025-06-03 16:48:30.886 | INFO     | app.service.intent_service:_generate_result:425 - 调用天气服务查询天气: 城市=北京, 日期=今天
+2025-06-03 16:48:30.887 | INFO     | app.service.weather_service:query_weather:36 - 开始查询天气，城市: 北京, 日期: 今天
+2025-06-03 16:48:30.888 | INFO     | app.service.weather_service:query_weather:47 - 清理后的城市名称: '北京'
+2025-06-03 16:48:30.888 | INFO     | app.service.weather_service:query_weather:50 - 调用天气API: 城市=北京, 日期=今天
+2025-06-03 16:48:30.888 | INFO     | app.adapters.api.weather_api:_parse_date:215 - 开始解析日期描述: '今天', 当前日期时间: 2025-06-03 16:48:30
+2025-06-03 16:48:30.888 | INFO     | app.adapters.api.weather_api:_parse_date:218 - 识别为今天: 2025-06-03
+2025-06-03 16:48:30.888 | INFO     | app.adapters.api.weather_api:_get_city_adcode:160 - 城市 北京 的编码从缓存获取: 110000
+2025-06-03 16:48:30.888 | INFO     | app.adapters.api.weather_api:get_weather:86 - 查询 北京(110000) 的实时天气
+2025-06-03 16:48:31.051 | INFO     | app.service.intent_service:_generate_result:430 - 天气查询结果: 北京当前天气：多云，温度28°C，西北风4，湿度14%
+2025-06-03 16:48:31.061 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: QUERY_WEATHER，动作类型: information_query
+2025-06-03 16:48:37.282 | INFO     | app.controller.intent_controller:recognize_intent:56 - 接收到来自 127.0.0.1 的意图识别请求，文本: '今天天气怎么样', 会话ID: user-123
+2025-06-03 16:48:37.283 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 今天天气怎么样, 会话ID: user-123
+2025-06-03 16:48:37.286 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 RuleBasedStrategy 识别出意图: QUERY_WEATHER
+2025-06-03 16:48:37.286 | INFO     | app.service.intent_service:_generate_result:358 - 处理天气查询意图，原始文本: '今天天气怎么样'
+2025-06-03 16:48:37.286 | INFO     | app.service.intent_service:_generate_result:359 - 提取的实体: 城市='None', 日期='今天'
+2025-06-03 16:48:37.287 | WARNING  | app.service.intent_service:_get_device_location:500 - 从会话上下文获取位置失败: argument of type 'DialogueContext' is not iterable
+2025-06-03 16:48:37.287 | WARNING  | app.service.intent_service:_get_device_location:529 - 从IP地址获取位置失败: argument of type 'DialogueContext' is not iterable
+2025-06-03 16:48:37.287 | INFO     | app.service.intent_service:_get_device_location:533 - 无法获取设备实际位置，使用默认位置: 北京
+2025-06-03 16:48:37.287 | INFO     | app.service.intent_service:_generate_result:395 - 未指定城市，使用设备当前位置: 北京
+2025-06-03 16:48:37.287 | INFO     | app.service.intent_service:_generate_result:425 - 调用天气服务查询天气: 城市=北京, 日期=今天
+2025-06-03 16:48:37.287 | INFO     | app.service.weather_service:query_weather:36 - 开始查询天气，城市: 北京, 日期: 今天
+2025-06-03 16:48:37.287 | INFO     | app.service.weather_service:query_weather:47 - 清理后的城市名称: '北京'
+2025-06-03 16:48:37.287 | INFO     | app.service.weather_service:query_weather:50 - 调用天气API: 城市=北京, 日期=今天
+2025-06-03 16:48:37.287 | INFO     | app.adapters.api.weather_api:_parse_date:215 - 开始解析日期描述: '今天', 当前日期时间: 2025-06-03 16:48:37
+2025-06-03 16:48:37.287 | INFO     | app.adapters.api.weather_api:_parse_date:218 - 识别为今天: 2025-06-03
+2025-06-03 16:48:37.287 | INFO     | app.adapters.api.weather_api:_get_city_adcode:160 - 城市 北京 的编码从缓存获取: 110000
+2025-06-03 16:48:37.287 | INFO     | app.adapters.api.weather_api:get_weather:86 - 查询 北京(110000) 的实时天气
+2025-06-03 16:48:37.429 | INFO     | app.service.intent_service:_generate_result:430 - 天气查询结果: 北京当前天气：多云，温度28°C，西北风4，湿度14%
+2025-06-03 16:48:37.433 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: QUERY_WEATHER，动作类型: information_query
+2025-06-03 16:48:49.387 | INFO     | app.controller.intent_controller:recognize_intent:56 - 接收到来自 127.0.0.1 的意图识别请求，文本: '今天上海天气咋样', 会话ID: user-123
+2025-06-03 16:48:49.387 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 今天上海天气咋样, 会话ID: user-123
+2025-06-03 16:48:49.389 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 RuleBasedStrategy 识别出意图: QUERY_WEATHER
+2025-06-03 16:48:49.389 | INFO     | app.service.intent_service:_generate_result:358 - 处理天气查询意图，原始文本: '今天上海天气咋样'
+2025-06-03 16:48:49.389 | INFO     | app.service.intent_service:_generate_result:359 - 提取的实体: 城市='今天上海', 日期='今天'
+2025-06-03 16:48:49.389 | INFO     | app.service.intent_service:_generate_result:425 - 调用天气服务查询天气: 城市=今天上海, 日期=今天
+2025-06-03 16:48:49.389 | INFO     | app.service.weather_service:query_weather:36 - 开始查询天气，城市: 今天上海, 日期: 今天
+2025-06-03 16:48:49.389 | INFO     | app.service.weather_service:query_weather:47 - 清理后的城市名称: '今天上海'
+2025-06-03 16:48:49.390 | INFO     | app.service.weather_service:query_weather:50 - 调用天气API: 城市=今天上海, 日期=今天
+2025-06-03 16:48:49.390 | INFO     | app.adapters.api.weather_api:_parse_date:215 - 开始解析日期描述: '今天', 当前日期时间: 2025-06-03 16:48:49
+2025-06-03 16:48:49.390 | INFO     | app.adapters.api.weather_api:_parse_date:218 - 识别为今天: 2025-06-03
+2025-06-03 16:48:49.528 | INFO     | app.adapters.api.weather_api:_get_city_adcode:197 - 城市 今天上海 的编码为 310000，已添加到缓存
+2025-06-03 16:48:49.529 | INFO     | app.adapters.api.weather_api:get_weather:86 - 查询 今天上海(310000) 的实时天气
+2025-06-03 16:48:49.685 | INFO     | app.service.intent_service:_generate_result:430 - 天气查询结果: 今天上海当前天气：多云，温度28°C，西风≤3，湿度40%
+2025-06-03 16:48:49.687 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: QUERY_WEATHER，动作类型: information_query
+2025-06-03 16:49:22.572 | INFO     | app.controller.intent_controller:recognize_intent:56 - 接收到来自 127.0.0.1 的意图识别请求，文本: '介绍一下你自己', 会话ID: user-123
+2025-06-03 16:49:22.572 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 介绍一下你自己, 会话ID: user-123
+2025-06-03 16:49:28.183 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 LLMBasedStrategy 识别出意图: unknown
+2025-06-03 16:49:36.595 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: unknown，动作类型: unknown
+2025-06-03 16:50:21.867 | INFO     | app.controller.intent_controller:recognize_intent:56 - 接收到来自 127.0.0.1 的意图识别请求，文本: '今天咸阳天气怎么样', 会话ID: user-123
+2025-06-03 16:50:21.867 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 今天咸阳天气怎么样, 会话ID: user-123
+2025-06-03 16:50:21.871 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 RuleBasedStrategy 识别出意图: QUERY_WEATHER
+2025-06-03 16:50:21.871 | INFO     | app.service.intent_service:_generate_result:358 - 处理天气查询意图，原始文本: '今天咸阳天气怎么样'
+2025-06-03 16:50:21.871 | INFO     | app.service.intent_service:_generate_result:359 - 提取的实体: 城市='今天咸阳', 日期='今天'
+2025-06-03 16:50:21.871 | INFO     | app.service.intent_service:_generate_result:425 - 调用天气服务查询天气: 城市=今天咸阳, 日期=今天
+2025-06-03 16:50:21.871 | INFO     | app.service.weather_service:query_weather:36 - 开始查询天气，城市: 今天咸阳, 日期: 今天
+2025-06-03 16:50:21.871 | INFO     | app.service.weather_service:query_weather:47 - 清理后的城市名称: '今天咸阳'
+2025-06-03 16:50:21.872 | INFO     | app.service.weather_service:query_weather:50 - 调用天气API: 城市=今天咸阳, 日期=今天
+2025-06-03 16:50:21.872 | INFO     | app.adapters.api.weather_api:_parse_date:215 - 开始解析日期描述: '今天', 当前日期时间: 2025-06-03 16:50:21
+2025-06-03 16:50:21.872 | INFO     | app.adapters.api.weather_api:_parse_date:218 - 识别为今天: 2025-06-03
+2025-06-03 16:50:22.025 | INFO     | app.adapters.api.weather_api:_get_city_adcode:197 - 城市 今天咸阳 的编码为 610400，已添加到缓存
+2025-06-03 16:50:22.025 | INFO     | app.adapters.api.weather_api:get_weather:86 - 查询 今天咸阳(610400) 的实时天气
+2025-06-03 16:50:22.152 | INFO     | app.service.intent_service:_generate_result:430 - 天气查询结果: 今天咸阳当前天气：阴，温度29°C，南风≤3，湿度31%
+2025-06-03 16:50:22.156 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: QUERY_WEATHER，动作类型: information_query
+2025-06-03 16:51:07.070 | INFO     | app.controller.intent_controller:recognize_intent:56 - 接收到来自 127.0.0.1 的意图识别请求，文本: '北海天气怎么样', 会话ID: user-123
+2025-06-03 16:51:07.072 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 北海天气怎么样, 会话ID: user-123
+2025-06-03 16:51:07.078 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 RuleBasedStrategy 识别出意图: QUERY_WEATHER
+2025-06-03 16:51:07.079 | INFO     | app.service.intent_service:_generate_result:358 - 处理天气查询意图，原始文本: '北海天气怎么样'
+2025-06-03 16:51:07.079 | INFO     | app.service.intent_service:_generate_result:359 - 提取的实体: 城市='北海', 日期='None'
+2025-06-03 16:51:07.079 | INFO     | app.service.intent_service:_generate_result:422 - 未指定日期，默认使用: 今天
+2025-06-03 16:51:07.080 | INFO     | app.service.intent_service:_generate_result:425 - 调用天气服务查询天气: 城市=北海, 日期=今天
+2025-06-03 16:51:07.080 | INFO     | app.service.weather_service:query_weather:36 - 开始查询天气，城市: 北海, 日期: 今天
+2025-06-03 16:51:07.080 | INFO     | app.service.weather_service:query_weather:47 - 清理后的城市名称: '北海'
+2025-06-03 16:51:07.080 | INFO     | app.service.weather_service:query_weather:50 - 调用天气API: 城市=北海, 日期=今天
+2025-06-03 16:51:07.080 | INFO     | app.adapters.api.weather_api:_parse_date:215 - 开始解析日期描述: '今天', 当前日期时间: 2025-06-03 16:51:07
+2025-06-03 16:51:07.080 | INFO     | app.adapters.api.weather_api:_parse_date:218 - 识别为今天: 2025-06-03
+2025-06-03 16:51:07.214 | INFO     | app.adapters.api.weather_api:_get_city_adcode:197 - 城市 北海 的编码为 450500，已添加到缓存
+2025-06-03 16:51:07.215 | INFO     | app.adapters.api.weather_api:get_weather:86 - 查询 北海(450500) 的实时天气
+2025-06-03 16:51:07.381 | INFO     | app.service.intent_service:_generate_result:430 - 天气查询结果: 北海当前天气：阴，温度32°C，西北风≤3，湿度55%
+2025-06-03 16:51:07.387 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: QUERY_WEATHER，动作类型: information_query

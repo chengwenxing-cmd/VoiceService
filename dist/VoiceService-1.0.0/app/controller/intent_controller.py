@@ -14,6 +14,7 @@ from app.domain.value_object.request_response import IntentRecognizeRequest
 from app.common.utils.response import ResponseUtil
 from pydantic import BaseModel
 from typing import Optional
+from fastapi import Request
 
 
 # 定义设备位置请求模型
@@ -39,33 +40,32 @@ class IntentController(BaseController):
         """注册路由"""
         
         @self.router.post("/recognize")
-        async def recognize_intent(request: IntentRecognizeRequest):
+        async def recognize_intent(request: Request, data: IntentRecognizeRequest):
             """识别意图接口
             
             Args:
-                request (IntentRecognizeRequest): 意图识别请求
+                request (Request): FastAPI请求对象，用于获取客户端IP
+                data (IntentRecognizeRequest): 意图识别请求
                 
             Returns:
-                dict: 意图识别响应，格式为：
-                {
-                  "success": true,
-                  "message": "Success",
-                  "data": {
-                    "intent": "INTENT_TYPE",
-                    "confidence": "0.9",
-                    "query": "用户输入的原始文本",
-                    "result": {
-                      # 触发指定action后返回的数据
-                    }
-                  }
-                }
+                dict: 意图识别响应
             """
             try:
+                # 获取客户端IP地址
+                client_ip = request.client.host if request.client else "127.0.0.1"
+                self.logger.info(f"接收到来自 {client_ip} 的意图识别请求，文本: '{data.text}', 会话ID: {data.session_id}")
+                
+                # 添加IP地址到上下文
+                context = data.context or {}
+                if "metadata" not in context:
+                    context["metadata"] = {}
+                context["metadata"]["client_ip"] = client_ip
+                
                 # 调用意图服务进行识别
                 response = await self.intent_service.recognize_intent(
-                    text=request.text,
-                    context=request.context,
-                    session_id=request.session_id
+                    text=data.text,
+                    context=context,
+                    session_id=data.session_id
                 )
                 
                 # 使用to_dict方法生成响应格式
@@ -75,18 +75,18 @@ class IntentController(BaseController):
                 if "data" not in result or not isinstance(result["data"], dict):
                     result["data"] = {}
                 
-                data = result["data"]
-                if "intent" not in data or data["intent"] is None:
-                    data["intent"] = "UNKNOWN"
+                data_result = result["data"]
+                if "intent" not in data_result or data_result["intent"] is None:
+                    data_result["intent"] = "UNKNOWN"
                 
-                if "confidence" not in data or data["confidence"] is None:
-                    data["confidence"] = "0.0"
+                if "confidence" not in data_result or data_result["confidence"] is None:
+                    data_result["confidence"] = "0.0"
                 
-                if "query" not in data or data["query"] is None:
-                    data["query"] = request.text or ""
+                if "query" not in data_result or data_result["query"] is None:
+                    data_result["query"] = data.text or ""
                 
-                if "result" not in data:
-                    data["result"] = {}
+                if "result" not in data_result:
+                    data_result["result"] = {}
                 
                 return result
             except Exception as e:
@@ -98,7 +98,7 @@ class IntentController(BaseController):
                     "data": {
                         "intent": "ERROR",
                         "confidence": "0.0",
-                        "query": request.text or "",
+                        "query": data.text or "",
                         "result": {
                             "status": "error",
                             "message": str(e),

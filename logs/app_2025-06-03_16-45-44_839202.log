@@ -1,0 +1,28 @@
+2025-06-03 16:45:44.921 | INFO     | app.adapters.llm.qwen_client:<module>:22 - 成功导入dashscope库
+2025-06-03 16:45:44.921 | INFO     | app.service.dialogue_context_service:__init__:138 - 对话上下文管理服务初始化成功
+2025-06-03 16:45:45.035 | INFO     | app.adapters.llm.qwen_client:__init__:59 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-06-03 16:45:45.035 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
+2025-06-03 16:45:45.101 | INFO     | app.adapters.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-06-03 16:45:45.102 | INFO     | app.adapters.api.weather_api:__init__:56 - 高德地图天气API适配器初始化完成
+2025-06-03 16:45:45.102 | INFO     | app.service.weather_service:__init__:24 - 天气服务初始化完成
+2025-06-03 16:45:45.102 | INFO     | app.service.intent_service:__init__:65 - 意图识别服务初始化成功
+2025-06-03 16:45:58.778 | INFO     | app.controller.intent_controller:recognize_intent:56 - 接收到来自 127.0.0.1 的意图识别请求，文本: '今天天气怎么样', 会话ID: user-123
+2025-06-03 16:45:58.778 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 今天天气怎么样, 会话ID: user-123
+2025-06-03 16:45:58.778 | INFO     | app.service.dialogue_context_service:get_context:154 - 为会话 user-123 创建新的对话上下文
+2025-06-03 16:45:58.784 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 CacheBasedStrategy 识别出意图: QUERY_WEATHER
+2025-06-03 16:45:58.784 | INFO     | app.service.intent_service:_generate_result:358 - 处理天气查询意图，原始文本: '今天天气怎么样'
+2025-06-03 16:45:58.785 | INFO     | app.service.intent_service:_generate_result:359 - 提取的实体: 城市='None', 日期='今天'
+2025-06-03 16:45:58.785 | WARNING  | app.service.intent_service:_get_device_location:500 - 从会话上下文获取位置失败: argument of type 'DialogueContext' is not iterable
+2025-06-03 16:45:58.785 | WARNING  | app.service.intent_service:_get_device_location:529 - 从IP地址获取位置失败: argument of type 'DialogueContext' is not iterable
+2025-06-03 16:45:58.785 | INFO     | app.service.intent_service:_get_device_location:533 - 无法获取设备实际位置，使用默认位置: 西安
+2025-06-03 16:45:58.786 | INFO     | app.service.intent_service:_generate_result:395 - 未指定城市，使用设备当前位置: 西安
+2025-06-03 16:45:58.786 | INFO     | app.service.intent_service:_generate_result:425 - 调用天气服务查询天气: 城市=西安, 日期=今天
+2025-06-03 16:45:58.786 | INFO     | app.service.weather_service:query_weather:36 - 开始查询天气，城市: 西安, 日期: 今天
+2025-06-03 16:45:58.787 | INFO     | app.service.weather_service:query_weather:47 - 清理后的城市名称: '西安'
+2025-06-03 16:45:58.787 | INFO     | app.service.weather_service:query_weather:50 - 调用天气API: 城市=西安, 日期=今天
+2025-06-03 16:45:58.787 | INFO     | app.adapters.api.weather_api:_parse_date:215 - 开始解析日期描述: '今天', 当前日期时间: 2025-06-03 16:45:58
+2025-06-03 16:45:58.787 | INFO     | app.adapters.api.weather_api:_parse_date:218 - 识别为今天: 2025-06-03
+2025-06-03 16:45:58.787 | INFO     | app.adapters.api.weather_api:_get_city_adcode:160 - 城市 西安 的编码从缓存获取: 610100
+2025-06-03 16:45:58.787 | INFO     | app.adapters.api.weather_api:get_weather:86 - 查询 西安(610100) 的实时天气
+2025-06-03 16:45:58.944 | INFO     | app.service.intent_service:_generate_result:430 - 天气查询结果: 西安当前天气：阴，温度30°C，南风≤3，湿度28%
+2025-06-03 16:45:58.954 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: QUERY_WEATHER，动作类型: information_query

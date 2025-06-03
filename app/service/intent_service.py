@@ -492,23 +492,44 @@ class IntentService(BaseService):
         # 1. 尝试从会话上下文中获取位置信息
         try:
             context = dialogue_context_service.get_context(session_id)
-            if context and "location" in context.metadata and "city" in context.metadata["location"] and context.metadata["location"]["city"]:
+            if context and "metadata" in context and "location" in context.metadata and "city" in context.metadata["location"] and context.metadata["location"]["city"]:
                 city = context.metadata["location"]["city"]
                 self.logger.info(f"从会话上下文获取到设备位置: {city}")
                 return city
         except Exception as e:
             self.logger.warning(f"从会话上下文获取位置失败: {str(e)}")
         
-        # 2. 尝试从设备信息获取位置（这部分需要设备实际传递位置信息）
-        # 在实际应用中，可以通过API网关或请求参数获取设备位置
-        # 例如，前端可以使用浏览器或设备的定位API获取位置，然后通过请求传递
+        # 2. 尝试从客户端IP地址获取位置
+        try:
+            context = dialogue_context_service.get_context(session_id)
+            if context and "metadata" in context and "client_ip" in context.metadata:
+                client_ip = context.metadata["client_ip"]
+                self.logger.info(f"尝试从IP地址 {client_ip} 获取位置")
+                
+                # 异步获取IP地址位置需要在异步函数中调用，这里使用一个简单的同步方法
+                import asyncio
+                location = asyncio.run_coroutine_threadsafe(
+                    self._get_location_from_ip(client_ip),
+                    asyncio.get_event_loop()
+                ).result()
+                
+                if location:
+                    self.logger.info(f"从IP地址获取到位置: {location}")
+                    
+                    # 保存到会话上下文中
+                    if not hasattr(context, "metadata"):
+                        context.metadata = {}
+                    if "location" not in context.metadata:
+                        context.metadata["location"] = {}
+                    context.metadata["location"]["city"] = location
+                    context.metadata["location"]["source"] = "ip"
+                    
+                    return location
+        except Exception as e:
+            self.logger.warning(f"从IP地址获取位置失败: {str(e)}")
         
-        # 3. 尝试使用IP地址定位（需要集成IP定位服务）
-        # 例如：可以使用第三方IP定位服务API
-        
-        # 4. 如果以上方法都失败，使用默认位置
-        # 在生产环境中，可以根据区域设置或用户偏好选择默认城市
-        default_city = "西安"  # 演示时使用西安作为默认位置
+        # 3. 如果以上方法都失败，使用默认位置
+        default_city = "北京"  # 演示时使用西安作为默认位置
         self.logger.info(f"无法获取设备实际位置，使用默认位置: {default_city}")
         return default_city
         
@@ -521,16 +542,61 @@ class IntentService(BaseService):
         Returns:
             Optional[str]: 城市名称，如果无法获取则返回None
         """
-        # 这里可以集成第三方IP定位服务
-        # 例如：ip-api.com, ipinfo.io, 高德地图IP定位等
-        # 
-        # 示例代码（需要替换为实际API调用）:
-        # async with aiohttp.ClientSession() as session:
-        #     async with session.get(f"http://ip-api.com/json/{ip_address}") as response:
-        #         if response.status == 200:
-        #             data = await response.json()
-        #             if data.get("status") == "success":
-        #                 return data.get("city")
+        # 如果是内网IP或本地IP，返回None
+        if ip_address.startswith(("192.168.", "10.", "127.")):
+            self.logger.info(f"IP地址 {ip_address} 为内网IP，无法获取位置")
+            return None
         
-        # 当前为演示，返回None表示无法通过IP获取位置
-        return None
+        # 使用高德地图IP定位API
+        if not self.weather_service.weather_api.api_key:
+            self.logger.warning("未配置高德地图API密钥，无法进行IP定位")
+            return None
+        
+        try:
+            # 高德地图IP定位API
+            ip_api_url = "https://restapi.amap.com/v3/ip"
+            
+            # 创建不验证SSL的上下文
+            import ssl
+            import aiohttp
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            conn = aiohttp.TCPConnector(ssl=ssl_context)
+            
+            params = {
+                "key": self.weather_service.weather_api.api_key,
+                "ip": ip_address,
+                "output": "JSON"
+            }
+            
+            async with aiohttp.ClientSession(connector=conn) as session:
+                async with session.get(ip_api_url, params=params, timeout=5) as response:
+                    if response.status != 200:
+                        self.logger.error(f"IP定位API请求失败: HTTP {response.status}")
+                        return None
+                    
+                    data = await response.json()
+                    self.logger.debug(f"IP定位API响应: {data}")
+                    
+                    # 检查API返回状态
+                    if data.get("status") != "1":
+                        self.logger.error(f"IP定位API返回错误: {data.get('info', '未知错误')}")
+                        return None
+                    
+                    # 提取城市信息
+                    city = data.get("city", "")
+                    if not city and data.get("province"):
+                        # 如果没有城市但有省份，使用省会城市
+                        city = data.get("province")
+                        
+                    if city:
+                        self.logger.info(f"通过IP地址 {ip_address} 获取到位置: {city}")
+                        return city
+                    else:
+                        self.logger.warning(f"IP地址 {ip_address} 未能解析到具体城市")
+                        return None
+                    
+        except Exception as e:
+            self.logger.error(f"IP定位失败: {str(e)}")
+            return None
