@@ -1,5 +1,0 @@
-2025-05-27 22:55:24.254 | INFO     | app.infrastructure.llm.qwen_client:<module>:21 - 成功导入dashscope库
-2025-05-27 22:55:24.255 | WARNING  | app.infrastructure.llm.openai_client:<module>:24 - 无法导入openai库，将使用模拟实现
-2025-05-27 22:55:24.255 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
-2025-05-27 22:55:24.327 | INFO     | app.infrastructure.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
-2025-05-27 22:55:24.327 | ERROR    | app.service.llm_service:__init__:46 - 大模型服务初始化失败: 'Settings' object has no attribute 'OPENAI_API_KEY'

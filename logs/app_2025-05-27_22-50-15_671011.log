@@ -1,6 +1,0 @@
-2025-05-27 22:50:15.733 | INFO     | app.infrastructure.llm.qwen_client:<module>:21 - 成功导入dashscope库
-2025-05-27 22:50:15.733 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
-2025-05-27 22:50:15.804 | INFO     | app.infrastructure.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
-2025-05-27 22:50:15.804 | INFO     | app.service.llm_service:__init__:23 - 大模型服务初始化成功
-2025-05-27 22:50:15.849 | INFO     | app.infrastructure.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
-2025-05-27 22:50:15.849 | INFO     | app.service.intent_service:__init__:32 - 意图识别服务初始化成功

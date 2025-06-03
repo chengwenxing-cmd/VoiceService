@@ -28,7 +28,17 @@ class DialogueContext:
         self.ttl = ttl
         self.history: List[Dict[str, Any]] = []
         self.last_updated = time.time()
-        self.metadata: Dict[str, Any] = {}
+        self.metadata: Dict[str, Any] = {
+            # 初始化元数据，包括位置信息
+            "location": {
+                "city": None,
+                "province": None,
+                "country": "中国",
+                "latitude": None,
+                "longitude": None,
+                "last_updated": None
+            }
+        }
     
     def add_user_message(self, text: str) -> None:
         """添加用户消息
@@ -83,6 +93,34 @@ class DialogueContext:
         """清空对话历史"""
         self.history = []
         self.last_updated = time.time()
+    
+    def set_location(self, city: str, province: Optional[str] = None, 
+                   latitude: Optional[float] = None, longitude: Optional[float] = None) -> None:
+        """设置设备位置信息
+        
+        Args:
+            city (str): 城市名称
+            province (Optional[str], optional): 省份. 默认为None.
+            latitude (Optional[float], optional): 纬度. 默认为None.
+            longitude (Optional[float], optional): 经度. 默认为None.
+        """
+        self.metadata["location"] = {
+            "city": city,
+            "province": province,
+            "country": "中国",
+            "latitude": latitude,
+            "longitude": longitude,
+            "last_updated": time.time()
+        }
+        self.last_updated = time.time()
+    
+    def get_location(self) -> Dict[str, Any]:
+        """获取设备位置信息
+        
+        Returns:
+            Dict[str, Any]: 位置信息
+        """
+        return self.metadata.get("location", {})
 
 
 class DialogueContextService:
@@ -178,6 +216,33 @@ class DialogueContextService:
         if session_id in self.contexts:
             self.logger.info(f"删除会话 {session_id} 的对话上下文")
             del self.contexts[session_id]
+            
+    def set_device_location(self, session_id: str, city: str, province: Optional[str] = None,
+                          latitude: Optional[float] = None, longitude: Optional[float] = None) -> None:
+        """设置设备位置信息
+        
+        Args:
+            session_id (str): 会话ID
+            city (str): 城市名称
+            province (Optional[str], optional): 省份. 默认为None.
+            latitude (Optional[float], optional): 纬度. 默认为None.
+            longitude (Optional[float], optional): 经度. 默认为None.
+        """
+        context = self.get_context(session_id)
+        context.set_location(city, province, latitude, longitude)
+        self.logger.info(f"已设置会话 {session_id} 的设备位置: {city}")
+        
+    def get_device_location(self, session_id: str) -> Dict[str, Any]:
+        """获取设备位置信息
+        
+        Args:
+            session_id (str): 会话ID
+            
+        Returns:
+            Dict[str, Any]: 位置信息
+        """
+        context = self.get_context(session_id)
+        return context.get_location()
     
     def _cleanup_expired_contexts(self) -> None:
         """清理过期的上下文"""

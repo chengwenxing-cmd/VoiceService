@@ -387,10 +387,12 @@ class IntentService(BaseService):
                                 city = potential_city
                                 self.logger.info(f"通过正则表达式匹配到城市: {city}")
                 
-                # 如果仍未找到城市，使用默认值
+                # 如果仍未找到城市，使用默认位置（设备当前所在位置）
                 if not city:
-                    city = "北京"  # 默认城市
-                    self.logger.info(f"未找到城市信息，使用默认城市: {city}")
+                    # TODO: 未来可以从设备获取实际位置信息
+                    # 这里先使用默认城市"北京"，后续可以替换为实际的定位逻辑
+                    city = self._get_device_location(session_id)
+                    self.logger.info(f"未指定城市，使用设备当前位置: {city}")
                 
                 # 如果没有提取到日期，尝试从文本中提取
                 if not date:
@@ -413,6 +415,11 @@ class IntentService(BaseService):
                             date = date_value
                             self.logger.info(f"从文本中匹配到日期: {date}")
                             break
+                
+                # 如果仍未找到日期，默认为"今天"
+                if not date:
+                    date = "今天"
+                    self.logger.info(f"未指定日期，默认使用: {date}")
                 
                 # 调用天气服务获取天气信息
                 self.logger.info(f"调用天气服务查询天气: 城市={city}, 日期={date}")
@@ -472,3 +479,58 @@ class IntentService(BaseService):
         """
         if intent.type != IntentType.UNKNOWN and intent.confidence > 0.7:
             await self.intent_repository.save(intent)
+            
+    def _get_device_location(self, session_id: str = "default") -> str:
+        """获取设备当前位置
+        
+        Args:
+            session_id (str, optional): 会话ID，用于从会话上下文中获取位置信息. 默认为"default".
+            
+        Returns:
+            str: 设备当前所在城市名称
+        """
+        # 1. 尝试从会话上下文中获取位置信息
+        try:
+            context = dialogue_context_service.get_context(session_id)
+            if context and "location" in context.metadata and "city" in context.metadata["location"] and context.metadata["location"]["city"]:
+                city = context.metadata["location"]["city"]
+                self.logger.info(f"从会话上下文获取到设备位置: {city}")
+                return city
+        except Exception as e:
+            self.logger.warning(f"从会话上下文获取位置失败: {str(e)}")
+        
+        # 2. 尝试从设备信息获取位置（这部分需要设备实际传递位置信息）
+        # 在实际应用中，可以通过API网关或请求参数获取设备位置
+        # 例如，前端可以使用浏览器或设备的定位API获取位置，然后通过请求传递
+        
+        # 3. 尝试使用IP地址定位（需要集成IP定位服务）
+        # 例如：可以使用第三方IP定位服务API
+        
+        # 4. 如果以上方法都失败，使用默认位置
+        # 在生产环境中，可以根据区域设置或用户偏好选择默认城市
+        default_city = "西安"  # 演示时使用西安作为默认位置
+        self.logger.info(f"无法获取设备实际位置，使用默认位置: {default_city}")
+        return default_city
+        
+    async def _get_location_from_ip(self, ip_address: str) -> Optional[str]:
+        """通过IP地址获取位置信息
+        
+        Args:
+            ip_address (str): IP地址
+            
+        Returns:
+            Optional[str]: 城市名称，如果无法获取则返回None
+        """
+        # 这里可以集成第三方IP定位服务
+        # 例如：ip-api.com, ipinfo.io, 高德地图IP定位等
+        # 
+        # 示例代码（需要替换为实际API调用）:
+        # async with aiohttp.ClientSession() as session:
+        #     async with session.get(f"http://ip-api.com/json/{ip_address}") as response:
+        #         if response.status == 200:
+        #             data = await response.json()
+        #             if data.get("status") == "success":
+        #                 return data.get("city")
+        
+        # 当前为演示，返回None表示无法通过IP获取位置
+        return None

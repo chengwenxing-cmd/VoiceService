@@ -6,7 +6,9 @@
 """
 
 import aiohttp
+import asyncio
 import json
+import ssl
 from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
 
@@ -15,6 +17,11 @@ from app.common.logging.logger import log_manager
 
 # 创建日志器
 logger = log_manager.get_logger("weather_api")
+
+# 创建一个不验证SSL证书的SSL上下文
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
 
 class WeatherAPI:
     """天气API适配器，使用高德地图API"""
@@ -92,7 +99,9 @@ class WeatherAPI:
             
             while retry_count < max_retries:
                 try:
-                    async with aiohttp.ClientSession() as session:
+                    # 使用不验证SSL的上下文
+                    conn = aiohttp.TCPConnector(ssl=ssl_context)
+                    async with aiohttp.ClientSession(connector=conn) as session:
                         async with session.get(self.base_url, params=params, timeout=10) as response:
                             if response.status != 200:
                                 logger.error(f"天气API请求失败 (尝试 {retry_count+1}/{max_retries}): HTTP {response.status}")
@@ -164,7 +173,9 @@ class WeatherAPI:
                 "output": "JSON"
             }
             
-            async with aiohttp.ClientSession() as session:
+            # 使用不验证SSL的上下文
+            conn = aiohttp.TCPConnector(ssl=ssl_context)
+            async with aiohttp.ClientSession(connector=conn) as session:
                 async with session.get(self.geo_url, params=params, timeout=10) as response:
                     if response.status != 200:
                         logger.error(f"地理编码API请求失败: HTTP {response.status}")
@@ -255,15 +266,18 @@ class WeatherAPI:
             Dict[str, Any]: 处理后的天气信息
         """
         try:
-            # 提取实时天气信息
-            forecast = data.get("forecasts", [{}])[0]
-            casts = forecast.get("casts", [])
+            # 提取实时天气信息 - 实时天气在lives字段中，而不是forecasts
+            lives = data.get("lives", [])
             
-            if not casts:
+            if not lives:
+                logger.error(f"未获取到实时天气数据，API返回: {data}")
                 return self._get_error_response("未获取到实时天气数据")
             
+            # 获取第一条实时天气数据
+            live_data = lives[0]
+            
             # 获取地理位置信息
-            location = forecast.get("city", city)
+            location = live_data.get("city", city)
             
             return {
                 "success": True,
@@ -271,12 +285,12 @@ class WeatherAPI:
                 "data": {
                     "city": location,
                     "date": datetime.now().strftime("%Y-%m-%d"),
-                    "weather": casts[0].get("dayweather", "未知"),
-                    "temperature": casts[0].get("daytemp", "未知"),
-                    "wind_direction": casts[0].get("daywind", "未知"),
-                    "wind_power": casts[0].get("daypower", "未知"),
-                    "humidity": f"{casts[0].get('nighthumidity', '未知')}%",
-                    "report_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "weather": live_data.get("weather", "未知"),
+                    "temperature": live_data.get("temperature", "未知"),
+                    "wind_direction": live_data.get("winddirection", "未知"),
+                    "wind_power": live_data.get("windpower", "未知"),
+                    "humidity": live_data.get("humidity", "未知") + "%",
+                    "report_time": live_data.get("reporttime", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
                     "is_forecast": False
                 },
                 "raw_api_response": data

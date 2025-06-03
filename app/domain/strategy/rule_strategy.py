@@ -6,6 +6,7 @@
 """
 
 from typing import Dict, Any, List, Optional
+import re
 
 from app.domain.strategy.base_strategy import IntentStrategy
 from app.domain.entity.intent import Intent, IntentType
@@ -58,6 +59,53 @@ class RuleBasedStrategy(IntentStrategy):
                 text=text,
                 entities={"operation": "停止", "target": "录音"}
             )
+        
+        # 天气查询意图识别
+        weather_patterns = [
+            r'(今天|明天|后天|周[一二三四五六日天]|星期[一二三四五六日天]|[\u4e00-\u9fa5]{2,6})(的)?天气(怎么样|如何|预报|情况)?',
+            r'天气(怎么样|如何|预报|情况)?',
+            r'(查询|查看|知道)(今天|明天|后天|周[一二三四五六日天]|星期[一二三四五六日天]|[\u4e00-\u9fa5]{2,6})?(的)?天气'
+        ]
+        
+        # 检查文本是否匹配天气查询模式
+        for pattern in weather_patterns:
+            if re.search(pattern, text):
+                # 尝试提取城市和日期
+                entities = {}
+                
+                # 尝试提取城市
+                city_match = re.search(r'([\u4e00-\u9fa5]{2,6})(的天气|天气)', text)
+                if city_match:
+                    potential_city = city_match.group(1)
+                    if potential_city not in ["今天", "明天", "后天", "当前", "今日", "明日"]:
+                        entities["city"] = potential_city
+                
+                # 尝试提取日期
+                date_patterns = {
+                    "今天|今日|当前": "今天",
+                    "明天|明日": "明天",
+                    "后天": "后天",
+                    "大后天": "大后天",
+                    "周一|星期一": "周一",
+                    "周二|星期二": "周二",
+                    "周三|星期三": "周三",
+                    "周四|星期四": "周四",
+                    "周五|星期五": "周五",
+                    "周六|星期六": "周六",
+                    "周日|周天|星期日|星期天": "周日"
+                }
+                
+                for pattern, date_value in date_patterns.items():
+                    if re.search(pattern, text):
+                        entities["date"] = date_value
+                        break
+                
+                return Intent(
+                    type=IntentType.QUERY_WEATHER,
+                    confidence=0.9,
+                    text=text,
+                    entities=entities
+                )
             
         # 其他简单规则可以在这里添加
         

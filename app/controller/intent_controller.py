@@ -9,8 +9,20 @@ from fastapi import APIRouter
 from app.common.logging.logger import log_manager
 from app.controller.base_controller import BaseController
 from app.service.intent_service import IntentService
+from app.service.dialogue_context_service import dialogue_context_service
 from app.domain.value_object.request_response import IntentRecognizeRequest
 from app.common.utils.response import ResponseUtil
+from pydantic import BaseModel
+from typing import Optional
+
+
+# 定义设备位置请求模型
+class DeviceLocationRequest(BaseModel):
+    """设备位置请求模型"""
+    city: str
+    province: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class IntentController(BaseController):
@@ -93,6 +105,86 @@ class IntentController(BaseController):
                             "code": 500,
                             "data": {}
                         }
+                    }
+                }
+                
+        @self.router.post("/location")
+        async def update_device_location(request: DeviceLocationRequest, session_id: str = "default"):
+            """更新设备位置信息
+            
+            Args:
+                request (DeviceLocationRequest): 设备位置请求
+                session_id (str, optional): 会话ID. 默认为"default".
+                
+            Returns:
+                dict: 更新结果
+            """
+            try:
+                # 设置设备位置
+                dialogue_context_service.set_device_location(
+                    session_id=session_id,
+                    city=request.city,
+                    province=request.province,
+                    latitude=request.latitude,
+                    longitude=request.longitude
+                )
+                
+                # 返回成功响应
+                return {
+                    "success": True,
+                    "message": f"设备位置已更新: {request.city}",
+                    "data": {
+                        "session_id": session_id,
+                        "location": {
+                            "city": request.city,
+                            "province": request.province,
+                            "latitude": request.latitude,
+                            "longitude": request.longitude
+                        }
+                    }
+                }
+            except Exception as e:
+                self.logger.error(f"更新设备位置失败: {str(e)}")
+                # 返回错误响应
+                return {
+                    "success": False,
+                    "message": f"更新位置失败: {str(e)}",
+                    "data": {
+                        "session_id": session_id
+                    }
+                }
+                
+        @self.router.get("/location")
+        async def get_device_location(session_id: str = "default"):
+            """获取设备位置信息
+            
+            Args:
+                session_id (str, optional): 会话ID. 默认为"default".
+                
+            Returns:
+                dict: 设备位置信息
+            """
+            try:
+                # 获取设备位置
+                location = dialogue_context_service.get_device_location(session_id)
+                
+                # 返回成功响应
+                return {
+                    "success": True,
+                    "message": "获取设备位置成功",
+                    "data": {
+                        "session_id": session_id,
+                        "location": location
+                    }
+                }
+            except Exception as e:
+                self.logger.error(f"获取设备位置失败: {str(e)}")
+                # 返回错误响应
+                return {
+                    "success": False,
+                    "message": f"获取位置失败: {str(e)}",
+                    "data": {
+                        "session_id": session_id
                     }
                 }
 

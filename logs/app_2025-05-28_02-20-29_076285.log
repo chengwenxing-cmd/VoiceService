@@ -1,8 +1,0 @@
-2025-05-28 02:20:29.171 | INFO     | app.adapters.llm.qwen_client:<module>:22 - 成功导入dashscope库
-2025-05-28 02:20:29.172 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
-2025-05-28 02:20:29.268 | INFO     | app.adapters.llm.qwen_client:__init__:59 - 千问大模型客户端初始化完成，使用模型: qwen-max
-2025-05-28 02:20:29.268 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
-2025-05-28 02:20:29.317 | INFO     | app.adapters.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
-2025-05-28 02:20:29.317 | WARNING  | app.adapters.api.weather_api:__init__:47 - 未配置AMAP_API_KEY，将使用模拟天气数据
-2025-05-28 02:20:29.318 | INFO     | app.service.weather_service:__init__:24 - 天气服务初始化完成
-2025-05-28 02:20:29.318 | INFO     | app.service.intent_service:__init__:65 - 意图识别服务初始化成功
