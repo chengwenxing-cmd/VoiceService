@@ -1,0 +1,16 @@
+2025-05-28 00:20:07.434 | INFO     | app.infrastructure.llm.qwen_client:<module>:21 - 成功导入dashscope库
+2025-05-28 00:20:07.435 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
+2025-05-28 00:20:07.530 | INFO     | app.infrastructure.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-28 00:20:07.530 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
+2025-05-28 00:20:07.583 | INFO     | app.infrastructure.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-28 00:20:07.583 | INFO     | app.service.intent_service:__init__:61 - 意图识别服务初始化成功
+2025-05-28 00:20:43.855 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 开始录音, 会话ID: user-123
+2025-05-28 00:20:43.856 | INFO     | app.service.dialogue_context_service:get_context:116 - 为会话 user-123 创建新的对话上下文
+2025-05-28 00:20:43.862 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 CacheBasedStrategy 识别出意图: IntentType.MEDIA_CONTROL
+2025-05-28 00:20:43.868 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.MEDIA_CONTROL，动作类型: ActionType.MEDIA_OPERATION
+2025-05-28 00:20:57.014 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 开始录音, 会话ID: user-123
+2025-05-28 00:20:59.200 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.STARTRECORDING
+2025-05-28 00:20:59.207 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION
+2025-05-28 00:21:16.071 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 停止录音, 会话ID: user-123
+2025-05-28 00:21:19.691 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.STOPRECORDING
+2025-05-28 00:21:19.694 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.STOPRECORDING，动作类型: ActionType.RECORDING_OPERATION

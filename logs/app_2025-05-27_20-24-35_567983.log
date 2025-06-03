@@ -1,0 +1,15 @@
+2025-05-27 20:24:35.655 | INFO     | app.infrastructure.llm.qwen_client:<module>:21 - 成功导入dashscope库
+2025-05-27 20:24:35.749 | INFO     | app.infrastructure.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-27 20:24:35.749 | INFO     | app.service.llm_service:__init__:23 - 大模型服务初始化成功
+2025-05-27 20:24:35.819 | INFO     | app.infrastructure.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-27 20:24:35.819 | INFO     | app.service.intent_service:__init__:31 - 意图识别服务初始化成功
+2025-05-27 20:24:49.695 | INFO     | app.service.intent_service:recognize_intent:51 - 开始处理意图识别请求，文本: 开始录音
+2025-05-27 20:24:49.706 | INFO     | app.service.llm_service:recognize_intent:54 - 开始识别意图，文本: 开始录音
+2025-05-27 20:24:52.125 | INFO     | app.service.llm_service:recognize_intent:62 - 意图识别成功，类型: STARTRECORDING
+2025-05-27 20:24:52.126 | INFO     | app.service.intent_service:recognize_intent:73 - 识别到意图类型: IntentType.STARTRECORDING
+2025-05-27 20:24:52.135 | INFO     | app.service.intent_service:recognize_intent:94 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION
+2025-05-27 20:25:39.493 | INFO     | app.service.intent_service:recognize_intent:51 - 开始处理意图识别请求，文本: 怎么开始录音了？目前不应该录音呀
+2025-05-27 20:25:39.502 | INFO     | app.service.llm_service:recognize_intent:54 - 开始识别意图，文本: 怎么开始录音了？目前不应该录音呀
+2025-05-27 20:25:41.604 | INFO     | app.service.llm_service:recognize_intent:62 - 意图识别成功，类型: STARTRECORDING
+2025-05-27 20:25:41.604 | INFO     | app.service.intent_service:recognize_intent:73 - 识别到意图类型: IntentType.STARTRECORDING
+2025-05-27 20:25:41.607 | INFO     | app.service.intent_service:recognize_intent:94 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION

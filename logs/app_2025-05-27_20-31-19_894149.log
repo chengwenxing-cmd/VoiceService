@@ -1,0 +1,13 @@
+2025-05-27 20:31:19.982 | INFO     | app.infrastructure.llm.qwen_client:<module>:21 - 成功导入dashscope库
+2025-05-27 20:31:20.077 | INFO     | app.infrastructure.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-27 20:31:20.077 | INFO     | app.service.llm_service:__init__:23 - 大模型服务初始化成功
+2025-05-27 20:31:20.135 | INFO     | app.infrastructure.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-27 20:31:20.135 | INFO     | app.service.intent_service:__init__:31 - 意图识别服务初始化成功
+2025-05-27 20:31:41.141 | INFO     | app.service.intent_service:recognize_intent:51 - 开始处理意图识别请求，文本: 怎么开始录音了？目前不应该录音呀
+2025-05-27 20:31:41.142 | INFO     | app.service.intent_service:recognize_intent:64 - 检测到录音相关的疑问或否定表达，将直接识别为STOPRECORDING
+2025-05-27 20:31:45.006 | INFO     | app.service.intent_service:recognize_intent:51 - 开始处理意图识别请求，文本: 怎么开始录音了？目前不应该录音呀
+2025-05-27 20:31:45.006 | INFO     | app.service.intent_service:recognize_intent:64 - 检测到录音相关的疑问或否定表达，将直接识别为STOPRECORDING
+2025-05-27 20:31:58.933 | INFO     | app.service.intent_service:recognize_intent:51 - 开始处理意图识别请求，文本: 怎么停止录音了？目前应该录音呀
+2025-05-27 20:31:58.933 | INFO     | app.service.intent_service:recognize_intent:64 - 检测到录音相关的疑问或否定表达，将直接识别为STOPRECORDING
+2025-05-27 20:32:00.360 | INFO     | app.service.intent_service:recognize_intent:51 - 开始处理意图识别请求，文本: 怎么停止录音了？目前应该录音呀
+2025-05-27 20:32:00.360 | INFO     | app.service.intent_service:recognize_intent:64 - 检测到录音相关的疑问或否定表达，将直接识别为STOPRECORDING

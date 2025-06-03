@@ -1,0 +1,11 @@
+2025-05-27 23:33:06.241 | INFO     | app.infrastructure.llm.qwen_client:<module>:21 - 成功导入dashscope库
+2025-05-27 23:33:06.242 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
+2025-05-27 23:33:06.338 | INFO     | app.infrastructure.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-27 23:33:06.338 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
+2025-05-27 23:33:06.387 | INFO     | app.infrastructure.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-27 23:33:06.387 | INFO     | app.service.intent_service:__init__:32 - 意图识别服务初始化成功
+2025-05-27 23:33:46.099 | INFO     | app.service.intent_service:recognize_intent:54 - 开始处理意图识别请求，文本: 开始录音, 会话ID: user-123
+2025-05-27 23:33:46.099 | INFO     | app.service.dialogue_context_service:get_context:116 - 为会话 user-123 创建新的对话上下文
+2025-05-27 23:33:46.099 | INFO     | app.service.intent_service:recognize_intent:81 - 检测到复杂的录音相关表达，将交由大模型深入理解
+2025-05-27 23:33:52.003 | INFO     | app.service.intent_service:recognize_intent:117 - 识别到意图类型: IntentType.STARTRECORDING
+2025-05-27 23:33:52.019 | INFO     | app.service.intent_service:recognize_intent:174 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION

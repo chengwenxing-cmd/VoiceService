@@ -1,0 +1,32 @@
+2025-05-28 00:56:14.893 | INFO     | app.adapters.llm.qwen_client:<module>:21 - 成功导入dashscope库
+2025-05-28 00:56:14.893 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
+2025-05-28 00:56:14.968 | INFO     | app.adapters.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-28 00:56:14.968 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
+2025-05-28 00:56:15.012 | INFO     | app.adapters.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-28 00:56:15.012 | INFO     | app.service.intent_service:__init__:61 - 意图识别服务初始化成功
+2025-05-28 00:56:22.457 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 哎, 会话ID: user-123
+2025-05-28 00:56:22.457 | INFO     | app.service.dialogue_context_service:get_context:116 - 为会话 user-123 创建新的对话上下文
+2025-05-28 00:56:26.806 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.UNKNOWN
+2025-05-28 00:56:30.239 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.UNKNOWN，动作类型: ActionType.UNKNOWN
+2025-05-28 00:56:46.546 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 现在几点了, 会话ID: user-123
+2025-05-28 00:56:51.492 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.QUERY_TIME
+2025-05-28 00:56:51.502 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.QUERY_TIME，动作类型: ActionType.INFORMATION_QUERY
+2025-05-28 00:57:10.443 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 好生气啊, 会话ID: user-123
+2025-05-28 00:57:16.777 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.UNKNOWN
+2025-05-28 00:57:20.329 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.UNKNOWN，动作类型: ActionType.UNKNOWN
+2025-05-28 00:57:31.413 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 帮我开始录音, 会话ID: user-123
+2025-05-28 00:57:35.137 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.STARTRECORDING
+2025-05-28 00:57:35.141 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION
+2025-05-28 00:57:47.359 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 不想录音了, 会话ID: user-123
+2025-05-28 00:57:47.362 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 RuleBasedStrategy 识别出意图: IntentType.STARTRECORDING
+2025-05-28 00:57:47.366 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION
+2025-05-28 00:57:55.535 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 不想录音了0, 会话ID: user-123
+2025-05-28 00:57:55.541 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 RuleBasedStrategy 识别出意图: IntentType.STARTRECORDING
+2025-05-28 00:57:55.546 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION
+2025-05-28 00:57:59.131 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 不想录音了, 会话ID: user-123
+2025-05-28 00:57:59.144 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 RuleBasedStrategy 识别出意图: IntentType.STARTRECORDING
+2025-05-28 00:57:59.147 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.STARTRECORDING，动作类型: ActionType.RECORDING_OPERATION
+2025-05-28 01:00:20.231 | INFO     | app.service.intent_service:recognize_intent:83 - 开始处理意图识别请求，文本: 好累啊！, 会话ID: user-u36xz9rw
+2025-05-28 01:00:20.231 | INFO     | app.service.dialogue_context_service:get_context:116 - 为会话 user-u36xz9rw 创建新的对话上下文
+2025-05-28 01:00:27.832 | INFO     | app.service.intent_service:_identify_intent:149 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.UNKNOWN
+2025-05-28 01:00:31.984 | INFO     | app.service.intent_service:recognize_intent:100 - 意图识别完成，类型: IntentType.UNKNOWN，动作类型: ActionType.UNKNOWN

@@ -1,0 +1,13 @@
+2025-05-27 22:51:35.166 | INFO     | app.infrastructure.llm.qwen_client:<module>:21 - 成功导入dashscope库
+2025-05-27 22:51:35.167 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
+2025-05-27 22:51:35.281 | INFO     | app.infrastructure.llm.qwen_client:__init__:58 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-27 22:51:35.281 | INFO     | app.service.llm_service:__init__:23 - 大模型服务初始化成功
+2025-05-27 22:51:35.327 | INFO     | app.infrastructure.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-27 22:51:35.327 | INFO     | app.service.intent_service:__init__:32 - 意图识别服务初始化成功
+2025-05-27 22:51:50.686 | INFO     | app.service.intent_service:recognize_intent:54 - 开始处理意图识别请求，文本: 介绍一下你自己？, 会话ID: user-bpf2fb4u
+2025-05-27 22:51:50.686 | INFO     | app.service.dialogue_context_service:get_context:116 - 为会话 user-bpf2fb4u 创建新的对话上下文
+2025-05-27 22:51:50.694 | ERROR    | app.service.intent_service:recognize_intent:147 - 意图识别处理失败: LLMService.recognize_intent() got an unexpected keyword argument 'message_history'
+2025-05-27 22:51:50.694 | ERROR    | app.controller.base_controller:general_exception_handler:42 - 未捕获的异常: 'IntentController' object has no attribute 'logger'
+2025-05-27 22:51:57.971 | INFO     | app.service.intent_service:recognize_intent:54 - 开始处理意图识别请求，文本: 介绍一下你自己？, 会话ID: user-bpf2fb4u
+2025-05-27 22:51:57.974 | ERROR    | app.service.intent_service:recognize_intent:147 - 意图识别处理失败: LLMService.recognize_intent() got an unexpected keyword argument 'message_history'
+2025-05-27 22:51:57.974 | ERROR    | app.controller.base_controller:general_exception_handler:42 - 未捕获的异常: 'IntentController' object has no attribute 'logger'

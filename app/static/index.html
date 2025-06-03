@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语音意图识别服务</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --light-bg: #f8f9fa;
+            --border-radius: 12px;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .app-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .app-header h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 28px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 16px 20px;
+        }
+        
+        .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+            color: #333;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-body {
+            padding: 20px;
+            background-color: #fff;
+        }
+        
+        .chat-history {
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: var(--border-radius);
+            background-color: var(--light-bg);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .chat-history:empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-style: italic;
+            min-height: 100px;
+        }
+        
+        .chat-history:empty:before {
+            content: "聊天历史将显示在这里";
+        }
+        
+        .message {
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background-color: #dcf8c6;
+            margin-left: auto;
+            text-align: right;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .assistant-message {
+            background-color: white;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #888;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        
+        .session-controls {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .session-id-container {
+            flex: 1;
+            display: flex;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .session-id-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        .session-id-input {
+            flex: 1;
+            border: none;
+            padding: 10px 15px;
+            outline: none;
+        }
+        
+        .session-buttons {
+            display: flex;
+            margin-left: 10px;
+            gap: 10px;
+        }
+        
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            background-color: white;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-icon:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .btn-icon.danger {
+            color: #dc3545;
+        }
+        
+        .btn-icon.danger:hover {
+            background-color: #fff5f5;
+        }
+        
+        .record-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px;
+            text-align: center;
+            background-color: #E8F5E9;
+            border-radius: var(--border-radius);
+            color: #2E7D32;
+            font-weight: 500;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        
+        .record-button:hover {
+            background-color: #C8E6C9;
+        }
+        
+        .record-button.recording {
+            background-color: #FFEBEE;
+            color: #D32F2F;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .record-button i {
+            margin-right: 10px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .record-status {
+            background-color: #f1f1f1;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .input-area {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        textarea.form-control {
+            border-radius: 12px;
+            resize: none;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            min-height: 60px;
+            box-shadow: none;
+        }
+        
+        textarea.form-control:focus {
+            box-shadow: none;
+            border-color: #bbb;
+        }
+        
+        .btn-recognize {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-recognize:hover {
+            background-color: #3b55d9;
+        }
+        
+        .btn-recognize i {
+            margin-right: 8px;
+        }
+        
+        .loader {
+            display: none;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result-card {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        pre {
+            background-color: var(--light-bg);
+            padding: 15px;
+            border-radius: 8px;
+            overflow: auto;
+            font-size: 13px;
+        }
+        
+        .json-key { color: #f44336; }
+        .json-string { color: #4caf50; }
+        .json-number { color: #2196f3; }
+        .json-boolean { color: #673ab7; }
+        .highlight { background-color: #fffacd; padding: 2px; border-radius: 3px; }
+        
+        .result-section {
+            margin-bottom: 15px;
+        }
+        
+        .result-section h6 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .info-item {
+            margin-bottom: 8px;
+            display: flex;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            width: 80px;
+            color: #666;
+        }
+        
+        .info-value {
+            flex: 1;
+        }
+        
+        .toggle-raw {
+            font-size: 13px;
+            color: #777;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .toggle-raw:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        #rawResponse {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+                margin-top: 15px;
+            }
+            
+            .card {
+                border-radius: 12px;
+            }
+            
+            .session-controls {
+                flex-direction: column;
+            }
+            
+            .session-buttons {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-header">
+            <h1>语音意图识别服务</h1>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-chat-dots"></i> 意图识别对话</h5>
+            </div>
+            <div class="card-body">
+                <div class="session-controls">
+                    <div class="session-id-container">
+                        <div class="session-id-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <input type="text" class="session-id-input" id="sessionInput" value="user-123" placeholder="会话ID">
+                    </div>
+                    <div class="session-buttons">
+                        <button class="btn-icon" id="newSessionBtn" title="新会话">
+                            <i class="bi bi-plus-circle"></i>
+                        </button>
+                        <button class="btn-icon danger" id="clearHistoryBtn" title="清空历史">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="record-button" id="recordButton">
+                    <i class="bi bi-mic"></i> 开始录音
+                </button>
+                
+                <div class="record-status" id="recordStatus" style="display: none;">
+                    录音已开始 <span class="recording-time">00:00</span>
+                </div>
+                
+                <div class="chat-history" id="chatHistory">
+                    <!-- 对话历史将在这里显示 -->
+                </div>
+                
+                <div class="input-area">
+                    <textarea class="form-control" id="textInput" rows="2" placeholder="例如：打开空调并设置温度为26度"></textarea>
+                </div>
+                
+                <button class="btn-recognize" id="recognizeBtn">
+                    <i class="bi bi-lightning-charge"></i> 识别意图
+                </button>
+            </div>
+        </div>
+
+        <div class="loader" id="loader"></div>
+
+        <div class="card result-card" id="resultCard">
+            <div class="card-header">
+                <h5><i class="bi bi-check-circle"></i> 识别结果</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="result-section">
+                            <h6>识别的意图</h6>
+                            <div id="intentResult">
+                                <div class="info-item">
+                                    <div class="info-label">类型：</div>
+                                    <div class="info-value" id="intentType"></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">置信度：</div>
+                                    <div class="info-value" id="intentConfidence"></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">实体：</div>
+                                    <div class="info-value">
+                                        <pre id="intentEntities"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="result-section">
+                            <h6>生成的动作</h6>
+                            <div id="actionResult">
+                                <div class="info-item">
+                                    <div class="info-label">类型：</div>
+                                    <div class="info-value" id="actionType"></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">目标：</div>
+                                    <div class="info-value" id="actionTarget"></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">操作：</div>
+                                    <div class="info-value" id="actionOperation"></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">参数：</div>
+                                    <div class="info-value">
+                                        <pre id="actionParameters"></pre>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">消息：</div>
+                                    <div class="info-value" id="actionMessage"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="toggle-raw" id="toggleRaw">显示原始响应 <i class="bi bi-chevron-down"></i></div>
+                <div class="mt-3" id="rawResponseContainer">
+                    <pre id="rawResponse"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 生成随机会话ID
+        function generateSessionId() {
+            return 'user-' + Math.random().toString(36).substring(2, 10);
+        }
+        
+        // 管理对话历史
+        const chatHistory = [];
+        
+        // 格式化时间
+        function formatTime(date) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+        
+        // 显示对话历史
+        function displayChatHistory() {
+            const historyContainer = document.getElementById('chatHistory');
+            historyContainer.innerHTML = '';
+            
+            chatHistory.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.role}-message`;
+                
+                const contentSpan = document.createElement('span');
+                contentSpan.textContent = message.content;
+                messageDiv.appendChild(contentSpan);
+                
+                const timeSpan = document.createElement('div');
+                timeSpan.className = 'message-time';
+                timeSpan.textContent = formatTime(new Date(message.timestamp));
+                messageDiv.appendChild(timeSpan);
+                
+                historyContainer.appendChild(messageDiv);
+            });
+            
+            // 滚动到底部
+            historyContainer.scrollTop = historyContainer.scrollHeight;
+        }
+        
+        // 添加消息到历史
+        function addMessageToHistory(role, content) {
+            chatHistory.push({ 
+                role, 
+                content, 
+                timestamp: new Date() 
+            });
+            displayChatHistory();
+        }
+        
+        // 录音按钮逻辑
+        const recordButton = document.getElementById('recordButton');
+        const recordStatus = document.getElementById('recordStatus');
+        let isRecording = false;
+        let recordingTimer;
+        let recordingSeconds = 0;
+        
+        recordButton.addEventListener('click', function() {
+            isRecording = !isRecording;
+            
+            if (isRecording) {
+                // 开始录音
+                recordButton.innerHTML = '<i class="bi bi-stop-circle"></i> 停止录音';
+                recordButton.classList.add('recording');
+                recordStatus.style.display = 'inline-block';
+                
+                // 开始计时
+                recordingSeconds = 0;
+                updateRecordingTime();
+                recordingTimer = setInterval(updateRecordingTime, 1000);
+                
+                // 添加系统消息到历史
+                addMessageToHistory('assistant', '录音已开始');
+            } else {
+                // 停止录音
+                recordButton.innerHTML = '<i class="bi bi-mic"></i> 开始录音';
+                recordButton.classList.remove('recording');
+                recordStatus.style.display = 'none';
+                
+                // 停止计时
+                clearInterval(recordingTimer);
+                
+                // 添加系统消息到历史
+                addMessageToHistory('assistant', `录音已停止，时长: ${formatRecordingTime(recordingSeconds)}`);
+            }
+        });
+        
+        function updateRecordingTime() {
+            recordingSeconds++;
+            const timeDisplay = document.querySelector('.recording-time');
+            timeDisplay.textContent = formatRecordingTime(recordingSeconds);
+        }
+        
+        function formatRecordingTime(seconds) {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        }
+        
+        // 新会话按钮点击事件
+        document.getElementById('newSessionBtn').addEventListener('click', function() {
+            // 生成新的会话ID
+            document.getElementById('sessionInput').value = generateSessionId();
+            
+            // 清空历史记录
+            chatHistory.length = 0;
+            displayChatHistory();
+            
+            // 隐藏识别结果卡片
+            document.getElementById('resultCard').style.display = 'none';
+            
+            // 重置录音按钮状态
+            if (isRecording) {
+                isRecording = false;
+                recordButton.innerHTML = '<i class="bi bi-mic"></i> 开始录音';
+                recordButton.classList.remove('recording');
+                recordStatus.style.display = 'none';
+                clearInterval(recordingTimer);
+            }
+        });
+        
+        // 清空历史按钮点击事件
+        document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+            // 清空历史记录
+            chatHistory.length = 0;
+            displayChatHistory();
+            
+            // 隐藏识别结果卡片
+            document.getElementById('resultCard').style.display = 'none';
+            
+            // 隐藏聊天历史区域或显示空状态
+            const historyContainer = document.getElementById('chatHistory');
+            historyContainer.innerHTML = '<div class="empty-history">聊天历史已清空</div>';
+            
+            // 给空状态添加样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .empty-history {
+                    color: #aaa;
+                    font-style: italic;
+                    text-align: center;
+                    padding: 30px 0;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // 格式化JSON显示
+        function syntaxHighlight(json) {
+            if (typeof json !== 'string') {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'json-number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+        
+        // 切换显示原始响应
+        document.getElementById('toggleRaw').addEventListener('click', function() {
+            const rawResponse = document.getElementById('rawResponse');
+            const icon = this.querySelector('i');
+            
+            if (rawResponse.style.display === 'none' || !rawResponse.style.display) {
+                rawResponse.style.display = 'block';
+                icon.className = 'bi bi-chevron-up';
+                this.textContent = '隐藏原始响应 ';
+                this.appendChild(icon);
+            } else {
+                rawResponse.style.display = 'none';
+                icon.className = 'bi bi-chevron-down';
+                this.textContent = '显示原始响应 ';
+                this.appendChild(icon);
+            }
+        });
+
+        // 识别按钮点击事件
+        document.getElementById('recognizeBtn').addEventListener('click', async function() {
+            const textInput = document.getElementById('textInput').value.trim();
+            if (!textInput) {
+                alert('请输入文本');
+                return;
+            }
+
+            // 显示加载动画，隐藏结果卡片
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('resultCard').style.display = 'none';
+            
+            // 获取会话ID
+            const sessionId = document.getElementById('sessionInput').value.trim() || 'default';
+            
+            // 添加用户消息到历史
+            addMessageToHistory('user', textInput);
+            
+            try {
+                // 准备请求数据
+                const requestData = {
+                    text: textInput,
+                    session_id: sessionId
+                };
+                
+                // 发送请求
+                const response = await fetch('/api/intent/recognize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                // 解析响应
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.message || '请求失败');
+                }
+                
+                if (!result.success) {
+                    throw new Error(result.message || '服务端处理失败');
+                }
+                
+                // 填充结果信息
+                const data = result.data;
+                document.getElementById('intentType').textContent = data.intent;
+                document.getElementById('intentConfidence').textContent = data.confidence;
+                
+                // 如果没有实体信息，显示空对象
+                document.getElementById('intentEntities').innerHTML = syntaxHighlight({});
+                
+                // 从result字段获取动作信息
+                const actionResult = data.result;
+                
+                // 使用switch语句处理不同的意图类型
+                switch(data.intent) {
+                    case "UNKNOWN":
+                    case "CHAT":
+                        // 处理未知意图或闲聊
+                        document.getElementById('actionType').textContent = data.intent === "UNKNOWN" ? "未知意图" : "闲聊";
+                        document.getElementById('actionTarget').textContent = "无";
+                        document.getElementById('actionOperation').textContent = "对话回复";
+                        document.getElementById('actionParameters').innerHTML = syntaxHighlight({});
+                        
+                        // 显示大模型的对话回复
+                        const replyMessage = actionResult.message || "抱歉，我不太理解您的意思。";
+                        document.getElementById('actionMessage').textContent = replyMessage;
+                        
+                        // 添加助手消息到历史
+                        addMessageToHistory('assistant', replyMessage);
+                        
+                        // 高亮显示对话回复
+                        document.getElementById('actionMessage').classList.add('highlight');
+                        break;
+                        
+                    case "STARTRECORDING":
+                        // 处理开始录音意图
+                        displayActionResult(actionResult);
+                        
+                        // 如果录音功能尚未启动，更新按钮状态
+                        if (!isRecording) {
+                            isRecording = true;
+                            recordButton.innerHTML = '<i class="bi bi-stop-circle"></i> 停止录音';
+                            recordButton.classList.add('recording');
+                            recordStatus.style.display = 'inline-block';
+                            
+                            // 开始计时
+                            recordingSeconds = 0;
+                            updateRecordingTime();
+                            recordingTimer = setInterval(updateRecordingTime, 1000);
+                        }
+                        break;
+                        
+                    case "STOPRECORDING":
+                        // 处理停止录音意图
+                        displayActionResult(actionResult);
+                        
+                        // 如果录音功能正在运行，更新按钮状态
+                        if (isRecording) {
+                            isRecording = false;
+                            recordButton.innerHTML = '<i class="bi bi-mic"></i> 开始录音';
+                            recordButton.classList.remove('recording');
+                            recordStatus.style.display = 'none';
+                            
+                            // 停止计时
+                            clearInterval(recordingTimer);
+                        }
+                        break;
+                        
+                    default:
+                        // 处理其他常规意图
+                        displayActionResult(actionResult);
+                        break;
+                }
+                
+                document.getElementById('rawResponse').innerHTML = syntaxHighlight(result);
+                
+                // 显示结果卡片
+                document.getElementById('resultCard').style.display = 'block';
+                
+                // 清空输入框
+                document.getElementById('textInput').value = '';
+                
+                // 辅助函数：显示常规动作结果
+                function displayActionResult(result) {
+                    document.getElementById('actionType').textContent = result.status || '无';
+                    document.getElementById('actionTarget').textContent = result.device || result.recording_id || result.media_type || '无';
+                    document.getElementById('actionOperation').textContent = result.command || '无';
+                    document.getElementById('actionParameters').innerHTML = syntaxHighlight(result.data && result.data.params ? result.data.params : {});
+                    document.getElementById('actionMessage').textContent = result.message || '无';
+                    
+                    // 添加助手消息到历史
+                    addMessageToHistory('assistant', result.message || '已处理您的请求');
+                    
+                    // 移除高亮（如果有）
+                    document.getElementById('actionMessage').classList.remove('highlight');
+                }
+            } catch (error) {
+                alert('错误: ' + error.message);
+                console.error('错误:', error);
+            } finally {
+                // 隐藏加载动画
+                document.getElementById('loader').style.display = 'none';
+            }
+        });
+        
+        // 按下Enter键发送消息
+        document.getElementById('textInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('recognizeBtn').click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+2025-05-28 01:44:16.301 | INFO     | app.adapters.llm.qwen_client:<module>:22 - 成功导入dashscope库
+2025-05-28 01:44:16.301 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
+2025-05-28 01:44:16.376 | INFO     | app.adapters.llm.qwen_client:__init__:59 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-28 01:44:16.376 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
+2025-05-28 01:44:16.420 | INFO     | app.adapters.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-28 01:44:16.420 | WARNING  | app.adapters.api.weather_api:__init__:28 - 未配置AMAP_API_KEY，将使用模拟天气数据
+2025-05-28 01:44:16.420 | INFO     | app.adapters.api.weather_api:__init__:30 - 天气API适配器初始化完成
+2025-05-28 01:44:16.420 | INFO     | app.service.weather_service:__init__:24 - 天气服务初始化完成
+2025-05-28 01:44:16.420 | INFO     | app.service.intent_service:__init__:65 - 意图识别服务初始化成功
+2025-05-28 01:44:22.562 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 今天天气怎么样？, 会话ID: user-123
+2025-05-28 01:44:22.562 | INFO     | app.service.dialogue_context_service:get_context:116 - 为会话 user-123 创建新的对话上下文
+2025-05-28 01:44:28.555 | WARNING  | app.adapters.llm.qwen_client:chat_completion:116 - JSON解析失败，返回原始文本
+2025-05-28 01:44:28.555 | ERROR    | app.service.intent_service:_identify_intent:165 - 识别意图失败: 'str' object has no attribute 'get'
+2025-05-28 01:44:28.555 | ERROR    | app.service.intent_service:recognize_intent:109 - 意图识别处理失败: 识别意图失败: 'str' object has no attribute 'get'
+2025-05-28 01:44:28.555 | ERROR    | app.controller.intent_controller:recognize_intent:81 - 处理意图识别请求失败: 意图识别处理失败: 识别意图失败: 'str' object has no attribute 'get'

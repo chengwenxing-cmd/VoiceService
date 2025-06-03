@@ -1,0 +1,16 @@
+2025-05-29 22:30:29.911 | INFO     | app.adapters.llm.qwen_client:<module>:22 - 成功导入dashscope库
+2025-05-29 22:30:29.911 | INFO     | app.service.dialogue_context_service:__init__:100 - 对话上下文管理服务初始化成功
+2025-05-29 22:30:30.021 | INFO     | app.adapters.llm.qwen_client:__init__:59 - 千问大模型客户端初始化完成，使用模型: qwen-max
+2025-05-29 22:30:30.021 | INFO     | app.service.llm_service:__init__:25 - 大模型服务初始化成功
+2025-05-29 22:30:30.113 | INFO     | app.adapters.repository.postgres_repository:__init__:55 - PostgreSQL意图仓储初始化完成
+2025-05-29 22:30:30.114 | INFO     | app.adapters.api.weather_api:__init__:49 - 高德地图天气API适配器初始化完成
+2025-05-29 22:30:30.114 | INFO     | app.service.weather_service:__init__:24 - 天气服务初始化完成
+2025-05-29 22:30:30.114 | INFO     | app.service.intent_service:__init__:65 - 意图识别服务初始化成功
+2025-05-29 22:30:48.680 | INFO     | app.service.intent_service:recognize_intent:87 - 开始处理意图识别请求，文本: 呜呜呜, 会话ID: user-123
+2025-05-29 22:30:48.680 | INFO     | app.service.dialogue_context_service:get_context:116 - 为会话 user-123 创建新的对话上下文
+2025-05-29 22:31:18.754 | ERROR    | app.adapters.llm.qwen_client:chat_completion:134 - 调用千问API异常: HTTPSConnectionPool(host='dashscope.aliyuncs.com', port=443): Max retries exceeded with url: /api/v1/services/aigc/text-generation/generation (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x107cf1160>: Failed to resolve 'dashscope.aliyuncs.com' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-05-29 22:31:18.754 | ERROR    | app.adapters.llm.qwen_client:intent_recognition:197 - 意图识别失败: 调用千问API异常: HTTPSConnectionPool(host='dashscope.aliyuncs.com', port=443): Max retries exceeded with url: /api/v1/services/aigc/text-generation/generation (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x107cf1160>: Failed to resolve 'dashscope.aliyuncs.com' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-05-29 22:31:18.755 | INFO     | app.service.intent_service:_identify_intent:153 - 使用策略 LLMBasedStrategy 识别出意图: IntentType.UNKNOWN
+2025-05-29 22:31:48.759 | ERROR    | app.adapters.llm.qwen_client:chat_completion:134 - 调用千问API异常: HTTPSConnectionPool(host='dashscope.aliyuncs.com', port=443): Max retries exceeded with url: /api/v1/services/aigc/text-generation/generation (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x107c76fd0>: Failed to resolve 'dashscope.aliyuncs.com' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-05-29 22:31:48.760 | ERROR    | app.adapters.llm.qwen_client:intent_recognition:197 - 意图识别失败: 调用千问API异常: HTTPSConnectionPool(host='dashscope.aliyuncs.com', port=443): Max retries exceeded with url: /api/v1/services/aigc/text-generation/generation (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x107c76fd0>: Failed to resolve 'dashscope.aliyuncs.com' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-05-29 22:31:48.760 | INFO     | app.service.intent_service:recognize_intent:104 - 意图识别完成，类型: IntentType.UNKNOWN，动作类型: ActionType.UNKNOWN
