@@ -1,0 +1,10 @@
+{
+  "projectId": "prj_voiceservice",
+  "orgId": "org_voiceservice",
+  "settings": {
+    "framework": null,
+    "buildCommand": null,
+    "devCommand": null,
+    "outputDirectory": null
+  }
+} 

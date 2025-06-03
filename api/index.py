@@ -15,4 +15,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.main import app
 
 # 导出给Vercel使用的ASGI应用
-app = app 
+app = app
+
+# 确保Vercel正确识别这是Python应用而非Next.js
+def handler(request, response):
+    return app 
